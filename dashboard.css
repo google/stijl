@@ -1,0 +1,57 @@
+/*
+  Copyright 2016 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+#site_list span {
+  margin: 1px;
+}
+#changes {
+  border: 0;
+  table-layout: fixed;
+}
+#changes td {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.status-marker {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0 4px -2px;
+  border: 1px solid #888;
+  border-radius: 3px;
+  background-color: #fff;
+}
+.status-marker-Pending {
+  background-color: #fad163;
+  border: 0;
+}
+.status-marker-Reviewing {
+  background-color: #fad163;
+  border: 0;
+}
+.status-marker-Approved {
+  background-color: #3d9400;
+  border: 0;
+}
+.status-marker-Submitted {
+  background-color: #888;
+  border: 0;
+}
+.status-marker-Abandoned {
+  background-color: #888;
+  border: 0;
+}
