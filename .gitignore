@@ -7,3 +7,6 @@
 *.rej
 *.swp
 .DS_Store
+
+/node_modules
+/extension/dashboard.js
