@@ -13,6 +13,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "browserify src/index.js -o extension/dashboard.js -t [ babelify --presets [ es2015 ] ]",
+    "watch": "watchify src/index.js -v -o extension/dashboard.js -t [ babelify --presets [ es2015 ] ]",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -24,5 +25,8 @@
     "bootstrap": "^3.3.6",
     "browserify": "^13.0.1",
     "jquery": "^2.2.4"
+  },
+  "devDependencies": {
+    "watchify": "^3.7.0"
   }
 }
