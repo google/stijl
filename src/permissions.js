@@ -13,21 +13,20 @@
 // limitations under the License.
 
 const makeChromeCall = (method, sites) => {
-  // TODO(nya): Use ES6 Promise.
-  const result = $.Deferred();
-  const origins = sites.map((site) => {
-    const a = document.createElement('a');
-    a.href = site['url'];
-    return a.origin + '/';
+  return new Promise((resolve, reject) => {
+    const origins = sites.map((site) => {
+      const a = document.createElement('a');
+      a.href = site['url'];
+      return a.origin + '/';
+    });
+    method({origins: origins}, (granted) => {
+      if (granted) {
+        resolve();
+      } else {
+        reject();
+      }
+    });
   });
-  method({origins: origins}, (granted) => {
-    if (granted) {
-      result.resolve();
-    } else {
-      result.reject();
-    }
-  });
-  return result.promise();
 };
 
 export const request = (sites) => {

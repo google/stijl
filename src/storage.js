@@ -13,11 +13,10 @@
 // limitations under the License.
 
 export const getConfiguredSites = () => {
-  // TODO(nya): Use ES6 Promise.
-  const result = $.Deferred();
-  chrome.storage.sync.get(null, (items) => {
-    const sites = items['sites'] || [];
-    result.resolve(sites);
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(null, (items) => {
+      const sites = items['sites'] || [];
+      resolve(sites);
+    });
   });
-  return result.promise();
 };

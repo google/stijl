@@ -22,7 +22,7 @@ export class RietveldBackend {
   }
 
   fetchAll_(selfAddress) {
-    const searches = [
+    const searchPromises = [
       this.doSearch_(
           'limit=1000&owner=' + selfAddress + '&closed=False',
           selfAddress),
@@ -36,7 +36,7 @@ export class RietveldBackend {
           'limit=1000&owner=' + selfAddress + '&closed=True',
           selfAddress)
     ];
-    return $.when.apply($, searches).then((...changesFromSearches) => {
+    return Promise.all(searchPromises).then((changesFromSearches) => {
       // Dedup changes in case searches returned overlapping results.
       const allChanges = [];
       const knownUrls = {};
@@ -55,27 +55,26 @@ export class RietveldBackend {
 
   doSearch_(param, selfAddress) {
     const url = this.site_['url'] + '/search?format=json&' + param;
-    return $.ajax({url: url, dataType: 'json'}).then((response) => {
-      const promises = [];
-      response['results'].forEach((entry) => {
-        // For open review, we need detailed messages to decide approval state.
-        const refetchPromise =
-            entry['closed'] && entry['reviewers'].length > 0 ?
-            $.when(entry) : this.doFetchOne_(entry['issue']);
-        const promise = refetchPromise.then((entry) => {
-          return this.parseEntry_(entry, selfAddress);
+    return fetch(url, {credentials: 'include'})
+      .then((res) => res.json()).then((data) => {
+        const promises = [];
+        data['results'].forEach((entry) => {
+          // For open review, we need detailed messages to decide approval state.
+          const refetchPromise =
+                entry['closed'] && entry['reviewers'].length > 0 ?
+                Promise.resolve(entry) : this.doFetchOne_(entry['issue']);
+          const promise = refetchPromise.then((entry) => {
+            return this.parseEntry_(entry, selfAddress);
+          });
+          promises.push(promise);
         });
-        promises.push(promise);
+        return Promise.all(promises).then((changes) => changes);
       });
-      return $.when.apply($, promises).then((...changes) => {
-        return changes;
-      });
-    });
   }
 
   doFetchOne_(issue) {
     const url = this.site_['url'] + '/api/' + issue + '?messages=True';
-    return $.ajax({url: url, dataType: 'json'});
+    return fetch(url, {credentials: 'include'}).then((res) => res.json());
   };
 
   parseEntry_(entry, selfAddress) {
@@ -136,50 +135,46 @@ export class RietveldBackend {
   }
 
   getSelfAddress_() {
-    return $.ajax({
-      url: this.site_['url'],
-      dataType: 'text',
-    }).then((text) => {
-      const $doc = $(new DOMParser().parseFromString(text, 'text/html'));
-      const selfAddress =
-          $doc.find('body > div[align=right] > b').text().split(' ')[0];
-      if (!selfAddress) {
-        return $.Deferred().reject();
-      }
-      return selfAddress;
-    });
+    return fetch(this.site_['url'], {credentials: 'include'})
+      .then((res) => res.text()).then((text) => {
+        const $doc = $(new DOMParser().parseFromString(text, 'text/html'));
+        const selfAddress =
+              $doc.find('body > div[align=right] > b').text().split(' ')[0];
+        if (!selfAddress) {
+          throw new Error('Not logged in');
+        }
+        return selfAddress;
+      });
   }
 
   login_() {
-    return $.ajax({
-      url: this.site_['url'],
-      dataType: 'text',
-    }).then((text) => {
-      const $doc = $(new DOMParser().parseFromString(text, 'text/html'));
-      const loginUrl = $doc.find('a:contains("Sign in")').first().attr('href');
-      const result = $.Deferred();
-      chrome.tabs.create({url: loginUrl, active: true}, (tab) => {
-        const tabId = tab.id;
-        const checkFinish = () => {
-          chrome.tabs.get(tabId, (tab) => {
-            if (!tab) {
-              result.reject('Tab was closed');
-            } else {
-              const a = document.createElement('a');
-              a.href = tab.url;
-              if (a.pathname == '/') {
-                console.log('Login success');
-                chrome.tabs.remove(tabId);
-                result.resolve();
-              } else {
-                setTimeout(checkFinish, 100);
-              }
-            }
+    return fetch(this.site_['url'], {credentials: 'include'})
+      .then((res) => res.text()).then((text) => {
+        const $doc = $(new DOMParser().parseFromString(text, 'text/html'));
+        const loginUrl = $doc.find('a:contains("Sign in")').first().attr('href');
+        return new Promise((resolve, reject) => {
+          chrome.tabs.create({url: loginUrl, active: true}, (tab) => {
+            const tabId = tab.id;
+            const checkFinish = () => {
+              chrome.tabs.get(tabId, (tab) => {
+                if (!tab) {
+                  reject(new Error('Tab was closed'));
+                } else {
+                  const a = document.createElement('a');
+                  a.href = tab.url;
+                  if (a.pathname == '/') {
+                    console.log('Login success');
+                    chrome.tabs.remove(tabId);
+                    resolve();
+                  } else {
+                    setTimeout(checkFinish, 100);
+                  }
+                }
+              });
+            };
+            checkFinish();
           });
-        };
-        checkFinish();
+        });
       });
-      return result.promise();
-    });
   }
 }

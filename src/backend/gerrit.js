@@ -33,24 +33,14 @@ export class GerritBackend {
     queries.forEach((query, i) => {
       changesUrl += '&q=' + encodeURIComponent(query);
     });
-    // Avoid auth dialog on 401.
-    changesUrl = changesUrl.replace('://', '://a:b@');
 
-    return $.ajax({
-      url: changesUrl,
-      dataType: 'text',
-    }).then((text) => {
-      let data;
-      try {
-        data = JSON.parse(text.substring(text.indexOf('\n') + 1));
-      } catch(exc) {
-        // When login cookie is expired, the server returns 200 with login form.
-        // Pretend 401 to proceed to login.
-        const err = {status: 401, exc: exc};
-        return $.Deferred().reject(err);
-      }
-      return this.parseResponse_(data, selfAddress);
-    });
+    return fetch(changesUrl, {credentials: 'include'})
+      .then((res) => res.text())
+      .then((text) => {
+        return JSON.parse(text.substring(text.indexOf('\n') + 1));
+      }).then((data) => {
+        return this.parseResponse_(data, selfAddress);
+      });
   }
 
   ensureLogin_() {
@@ -62,52 +52,39 @@ export class GerritBackend {
   }
 
   getSelfAddress_() {
-    let accountsUrl = this.site_['url'] + '/accounts/self';
-    // Avoid auth dialog on 401.
-    accountsUrl = accountsUrl.replace('://', '://a:b@');
-
-    return $.ajax({
-      url: accountsUrl,
-      dataType: 'text',
-    }).then((text) => {
-      let data;
-      try {
-        data = JSON.parse(text.substring(text.indexOf('\n') + 1));
-      } catch (exc) {
-        // When login cookie is expired, the server returns 200 with login form.
-        // Pretend 401 to proceed to login.
-        const err = {status: 401, exc: exc};
-        return $.Deferred().reject(err);
-      }
-      return data['email'];
-    });
+    const accountsUrl = this.site_['url'] + '/accounts/self';
+    return fetch(accountsUrl, {credentials: 'include'})
+      .then((res) => res.text())
+      .then((text) => {
+        return JSON.parse(text.substring(text.indexOf('\n') + 1));
+      }).then((data) => data.email);
   }
 
   login_() {
-    const result = $.Deferred();
-    const loginUrl = this.site_['url'] + '/login/';
-    chrome.tabs.create({url: loginUrl, active: true}, (tab) => {
-      const tabId = tab.id;
-      const checkFinish = () => {
-        chrome.tabs.get(tabId, (tab) => {
-          if (!tab) {
-            result.reject('Tab was closed');
-          } else {
-            const a = document.createElement('a');
-            a.href = tab.url;
-            if (a.pathname == '/') {
-              console.log('Login success');
-              chrome.tabs.remove(tabId);
-              result.resolve();
+    return new Promise((resolve, reject) => {
+      const loginUrl = this.site_['url'] + '/login/';
+      chrome.tabs.create({url: loginUrl, active: true}, (tab) => {
+        const tabId = tab.id;
+        const checkFinish = () => {
+          chrome.tabs.get(tabId, (tab) => {
+            if (!tab) {
+              reject(new Error('Tab was closed'));
             } else {
-              setTimeout(checkFinish, 100);
+              const a = document.createElement('a');
+              a.href = tab.url;
+              if (a.pathname == '/') {
+                console.log('Login success');
+                chrome.tabs.remove(tabId);
+                resolve();
+              } else {
+                setTimeout(checkFinish, 100);
+              }
             }
-          }
-        });
-      };
-      checkFinish();
+          });
+        };
+        checkFinish();
+      });
     });
-    return result.promise();
   }
 
   parseResponse_(data, selfAddress) {

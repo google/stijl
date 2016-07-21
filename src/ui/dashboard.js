@@ -30,7 +30,7 @@ export const update = () => {
       const allChanges = [];
 
       $('#site_list').empty();
-      const fetches = [];
+      const fetchPromises = [];
       sites.forEach((site) => {
         const $label = $('<span>').attr('class', 'label label-warning')
             .append($('<a>').css('color', 'white').attr('href', site['url'])
@@ -40,28 +40,30 @@ export const update = () => {
         const backend = backend_lib.create(site);
         if (!backend) {
           $label.attr('class', 'label label-danger');
-          console.log('Unknown site type: ' + site['type']);
+          console.error('Unknown site type: ' + site['type']);
           return;
         }
 
-        const fetch = backend.fetch().then((changes) => {
+        const fetchPromise = backend.fetch().then((changes) => {
           console.log('Fetched from ' + site['label']);
           allChanges.push(...changes);
           updateChanges(allChanges);
           $label.attr('class', 'label label-success');
         }, (err) => {
-          console.log('Failed to fetch from ' + site['label'] + ':');
-          console.log(err);
+          console.error('Failed to fetch from ' + site['label'] + ':');
+          console.error(err);
           $label.attr('class', 'label label-danger');
         });
-        fetches.push(fetch);
+        fetchPromises.push(fetchPromise);
       });
 
       $('#loading').show();
-      return $.when.apply($, fetches).always(() => {
+      const allPromise = Promise.all(fetchPromises);
+      allPromise.catch((err) => null).then(() => {
         $('#loading').hide();
         console.log('All fetches finished');
       });
+      return allPromise;
     }, () => {
       misc.showPermissionRequiredModal();
     });
