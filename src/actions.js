@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as backend_lib from './backend';
+import * as backends from './backends';
 import * as permissions from './permissions';
 
 export const UPDATE_CONFIG = 'UPDATE_CONFIG';
@@ -90,7 +90,7 @@ export const refreshAll = () => {
 
     permissions.check(activeSites).then(() => {
       Object.values(activeSites).forEach((site) => {
-        const backend = backend_lib.create(site);
+        const backend = backends.create(site);
         return backend.fetch().then((changes) => {
           dispatch(updateChangesBySite(site.label, changes));
         }).then(() => {

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { GerritBackend } from './backend/gerrit';
-import { RietveldBackend } from './backend/rietveld';
+import { GerritBackend } from './backends/gerrit';
+import { RietveldBackend } from './backends/rietveld';
 
 export const create = (site) => {
   if (site['type'] == 'gerrit') {
