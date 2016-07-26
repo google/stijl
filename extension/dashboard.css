@@ -14,14 +14,11 @@
   limitations under the License.
 */
 
-#site_list span {
-  margin: 1px;
-}
-#changes {
+.review-table {
   border: 0;
   table-layout: fixed;
 }
-#changes td {
+.review-table td {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

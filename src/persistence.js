@@ -12,11 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const getConfiguredSites = () => {
+import * as actions from './actions';
+
+const subscribe = (store) => {
+  let lastConfig = null;
+  store.subscribe(() => {
+    const { config } = store.getState();
+    if (config !== lastConfig) {
+      lastConfig = config;
+      chrome.storage.sync.set(config, () => {});
+    }
+  });
+};
+
+export const init = (store) => {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(null, (items) => {
-      const sites = items['sites'] || [];
-      resolve(sites);
+    chrome.storage.sync.get(null, (config) => {
+      store.dispatch(actions.updateConfig(config));
+      subscribe(store);
+      resolve();
     });
   });
 };

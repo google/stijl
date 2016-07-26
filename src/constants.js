@@ -12,12 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as config from './ui/config';
-import * as dashboard from './ui/dashboard';
-import * as misc from './ui/misc';
-
-export const installHandlers = () => {
-  config.installHandlers();
-  dashboard.installHandlers();
-  misc.installHandlers();
-};
+export const PRESETS = [
+  {
+    name: 'Chromium (Rietveld)',
+    label: 'chromium-rietveld',
+    url: 'https://codereview.chromium.org',
+    type: 'rietveld',
+  },
+  {
+    name: 'Chromium (Gerrit)',
+    label: 'chromium-gerrit',
+    url: 'https://chromium-review.googlesource.com',
+    type: 'gerrit',
+  },
+  {
+    name: 'Android AOSP',
+    label: 'android-aosp',
+    url: 'https://android-review.googlesource.com',
+    type: 'gerrit',
+  },
+];

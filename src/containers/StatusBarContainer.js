@@ -12,23 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as permissions from '../permissions';
-import * as storage from '../storage';
-import * as dashboard from './dashboard';
+import * as ReactRedux from 'react-redux';
 
-const handlePermissionContinueButton = () => {
-  storage.getConfiguredSites().then((sites) => {
-    return permissions.request(sites);
-  }).then(() => {
-    $('#permission_modal').modal('hide');
-    dashboard.update();
-  });
-};
+import * as actions from '../actions';
+import StatusBar from '../components/StatusBar';
 
-export const showPermissionRequiredModal = () => {
-  $('#permission_modal').modal('show');
-};
+const mapStateToProps = ({ activeSites }) => ({ activeSites });
+const mapDispatchToProps = (dispatch) => ({
+  onConfig() {
+    dispatch(actions.showConfigModal());
+  },
+});
 
-export const installHandlers = () => {
-  $('#permission_modal_continue').click(handlePermissionContinueButton);
-};
+const StatusBarContainer =
+    ReactRedux.connect(mapStateToProps, mapDispatchToProps)(StatusBar);
+
+export default StatusBarContainer;

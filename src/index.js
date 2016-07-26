@@ -12,8 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as ui from './ui';
-import * as dashboard from './ui/dashboard';
+// This must come first.
+import 'babel-polyfill';
 
-ui.installHandlers();
-dashboard.update();
+import React from 'react';
+import * as ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import * as Redux from 'redux';
+import ReduxThunk from 'redux-thunk';
+
+import * as actions from './actions';
+import Dashboard from './components/Dashboard';
+import * as persistence from './persistence';
+import * as reducers from './reducers';
+
+const store = Redux.createStore(
+  reducers.rootReducer,
+  Redux.applyMiddleware(ReduxThunk));
+
+persistence.init(store).then(() => {
+  if (store.getState().config.sites.length == 0) {
+    store.dispatch(actions.showConfigModal());
+  } else {
+    store.dispatch(actions.refreshAll());
+  }
+});
+
+const App = () => (
+  <Provider store={store}>
+    <Dashboard />
+  </Provider>
+);
+
+ReactDOM.render(<App />, document.getElementById('root'));
