@@ -14,16 +14,10 @@
 
 export const PRESETS = [
   {
-    name: 'Chromium (Rietveld)',
-    label: 'chromium-rietveld',
+    name: 'Chromium',
+    label: 'chromium',
     url: 'https://codereview.chromium.org',
     type: 'rietveld',
-  },
-  {
-    name: 'Chromium (Gerrit)',
-    label: 'chromium-gerrit',
-    url: 'https://chromium-review.googlesource.com',
-    type: 'gerrit',
   },
   {
     name: 'Android AOSP',
