@@ -5,6 +5,21 @@ Stijl is a dashboard showing all code reviews at multiple code review
 websites in a single page.
 
 
+How to Build
+------------
+
+For development, you usually want to use `watchify` to incrementally
+build JS as you make changes to the source code.
+
+```
+$ npm install    # Takes minutes and needs ~500MB disk space
+$ npm run watch  # Takes a minute to build first time
+```
+
+Then drag and drop `extension` directory to chrome://extensions to
+register as an unpacked extension.
+
+
 Author
 ------
 
