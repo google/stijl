@@ -1,8 +1,7 @@
 Stijl
 =====
 
-Stijl is a dashboard showing all code reviews at multiple code review
-websites in a single page.
+Stijl is a Chrome extension showing all your code reviews in a single page.
 
 
 How to Build
@@ -23,17 +22,10 @@ register as an unpacked extension.
 Author
 ------
 
-Shuhei Takahashi
+Stijl is originally authored by [Shuhei Takahashi](https://nya3.jp).
+The list of contributers can be seen at [GitHub](https://github.com/google/stijl/graphs/contributors).
 
-- Website: https://nya3.jp/
-- Twitter: https://twitter.com/nya3jp/
-
-
-Disclaimer
-----------
-
-This library is authored by a Googler and copyrighted by Google, but
-is not an official Google product.
+Stijl is copyrighted by Google, but not an official Google product.
 
 
 License
