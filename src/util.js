@@ -35,3 +35,18 @@ export const formatPrettyTime = (timestamp) => {
   return '' + MONTHS[date.getMonth()] + ' ' + date.getDate() + ' ' +
       date.getFullYear();
 };
+
+/**
+ * @param {number} duration - The duration to wait for in milliseconds.
+ * @return Promise to wait for |duration| milliseconds, and then to resolve.
+ *     If |duration| is nagative, the returned instance will be rejected.
+ */
+export const sleep = (duration) => {
+  return new Promise((resolve, reject) => {
+    if (duration < 0) {
+      reject(new Error('Nagative duration: ' + duration));
+      return;
+    }
+    setTimeout(duration, resolve);
+  });
+};

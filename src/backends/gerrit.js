@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import chromeAsync from '../chromeasync'
+
 export class GerritBackend {
   constructor(site) {
     this.site_ = site;
   }
 
   fetch() {
-    return this.ensureLogin_().then(this.fetchAll_.bind(this));
+    return this.ensureLogin_()
+      .then((selfAddress) => this.fetchAll_(selfAddress));
   }
 
   fetchAll_(selfAddress) {
-    var queries = [
+    let queries = [
       'is:open owner:' + selfAddress,
       'is:open reviewer:' + selfAddress + ' -owner:' + selfAddress,
       'is:merged owner:' + selfAddress + ' limit:20'
@@ -37,54 +40,46 @@ export class GerritBackend {
     return fetch(changesUrl, {credentials: 'include'})
       .then((res) => res.text())
       .then((text) => {
-        return JSON.parse(text.substring(text.indexOf('\n') + 1));
-      }).then((data) => {
+        let data = JSON.parse(text.substring(text.indexOf('\n') + 1))
         return this.parseResponse_(data, selfAddress);
       });
   }
 
   ensureLogin_() {
-    return this.getSelfAddress_().then((selfAddress) => {
-      return selfAddress;
-    }, (err) => {
-      return this.login_().then(this.getSelfAddress_.bind(this));
-    });
+    return this.getSelfAddress_().catch((err) =>
+	this.login_().then(() => this.getSelfAddress_()));
   }
 
   getSelfAddress_() {
     const accountsUrl = this.site_['url'] + '/accounts/self';
     return fetch(accountsUrl, {credentials: 'include'})
       .then((res) => res.text())
-      .then((text) => {
-        return JSON.parse(text.substring(text.indexOf('\n') + 1));
-      }).then((data) => data.email);
+      .then((text) =>
+        JSON.parse(text.substring(text.indexOf('\n') + 1)).email);
   }
 
   login_() {
-    return new Promise((resolve, reject) => {
-      const loginUrl = this.site_['url'] + '/login/';
-      chrome.tabs.create({url: loginUrl, active: true}, (tab) => {
+    const loginUrl = this.site_['url'] + '/login/';
+    return chromeAsync.tabs.create({url: loginUrl, active: true})
+      .then((tab) => {
         const tabId = tab.id;
-        const checkFinish = () => {
-          chrome.tabs.get(tabId, (tab) => {
-            if (!tab) {
-              reject(new Error('Tab was closed'));
-            } else {
-              const a = document.createElement('a');
-              a.href = tab.url;
-              if (a.pathname == '/') {
-                console.log('Login success');
-                chrome.tabs.remove(tabId);
-                resolve();
-              } else {
-                setTimeout(checkFinish, 100);
-              }
-            }
-          });
-        };
-        checkFinish();
+        const checkFinish = () => chromeAsync.tabs.get(tabId).then((tab) => {
+          if (!tab) {
+            return Promise.reject(new Error('Tab was closed'));
+          }
+
+          const a = document.createElement('a');
+          a.href = tab.url;
+          if (a.pathname != '/') {
+            // Not yet logged in. Wait 100ms and retry.
+            return util.sleep(100).then(checkFinish);
+          }
+
+          console.log('Login success');
+          chrome.tabs.remove(tabId);
+        });
+        return checkFinish();
       });
-    });
   }
 
   parseResponse_(data, selfAddress) {
@@ -103,14 +98,10 @@ export class GerritBackend {
       if (entry['submittable']) {
         status = 'Approved';
       } else {
-        var reviewing = false;
         const reviewers = entry['labels']['Code-Review']['all'] || [];
-        reviewers.forEach((user) => {
-          if (user['_account_id'] != entry['owner']['_account_id']) {
-            reviewing = true;
-          }
-        });
-        if (reviewing) {
+        const owner_id = entry['owner']['_account_id'];
+        if (reviewers.find((user) => user['_account_id'] != owner_id) >= 0) {
+          // Here non-owner user is listed.
           status = 'Reviewing';
         } else {
           status = 'Pending';
@@ -123,7 +114,7 @@ export class GerritBackend {
     } else {
       status = 'Unknown';
     }
-    const change = {
+    return {
       owned: entry['owner']['email'] == selfAddress,
       reviewing: true,  // Gerrit does not support CC.
       subject: entry['subject'],
@@ -134,6 +125,5 @@ export class GerritBackend {
       ownerName: entry['owner']['name'],
       updated: new Date(entry['updated'] + ' UTC').getTime()
     };
-    return change;
   }
 }
