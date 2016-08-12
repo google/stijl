@@ -15,10 +15,10 @@
 
 /**
  * Wraps a chrome API, which takes the callback with an argument at the last
- * argument, * and returns a function returning the Promise instance.
- * Returned promise will be rejected if wrapped API succeeds (i.e.
- * chrome.runtime.lastError is not set). Otherwise, resolved with the
- * returned value.
+ * argument, and returns a function returning the Promise instance.
+ * Returned promise will be resolved if the wrapped API succeeds (i.e.
+ * chrome.runtime.lastError is not set). Otherwise, rejected with
+ * chrome.runtime.lastError value.
  * Example usage:
  *   var asyncApi = promisify(chrome.storage.sync, 'get');
  *   asyncApi().then((result) => { ... });
@@ -31,7 +31,7 @@
  *     the given chrome API.
  */
 function promisify(thisArg, name) {
-  let api = thisArg[name];
+  const api = thisArg[name];
   return (...args) => new Promise((resolve, reject) => {
     api.call(thisArg, ...args, function(result) {
       if (chrome.runtime.lastError) {

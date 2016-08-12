@@ -47,6 +47,6 @@ export const sleep = (duration) => {
       reject(new Error('Nagative duration: ' + duration));
       return;
     }
-    setTimeout(duration, resolve);
+    setTimeout(resolve, duration);
   });
 };

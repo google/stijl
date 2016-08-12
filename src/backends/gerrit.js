@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import chromeAsync from '../chromeasync'
+import * as util from '../util'
 
 export class GerritBackend {
   constructor(site) {
@@ -25,7 +26,7 @@ export class GerritBackend {
   }
 
   fetchAll_(selfAddress) {
-    let queries = [
+    const queries = [
       'is:open owner:' + selfAddress,
       'is:open reviewer:' + selfAddress + ' -owner:' + selfAddress,
       'is:merged owner:' + selfAddress + ' limit:20'
@@ -40,7 +41,7 @@ export class GerritBackend {
     return fetch(changesUrl, {credentials: 'include'})
       .then((res) => res.text())
       .then((text) => {
-        let data = JSON.parse(text.substring(text.indexOf('\n') + 1))
+        const data = JSON.parse(text.substring(text.indexOf('\n') + 1))
         return this.parseResponse_(data, selfAddress);
       });
   }
@@ -99,8 +100,8 @@ export class GerritBackend {
         status = 'Approved';
       } else {
         const reviewers = entry['labels']['Code-Review']['all'] || [];
-        const owner_id = entry['owner']['_account_id'];
-        if (reviewers.find((user) => user['_account_id'] != owner_id) >= 0) {
+        const ownerId = entry['owner']['_account_id'];
+        if (reviewers.find((user) => user['_account_id'] != ownerId) >= 0) {
           // Here non-owner user is listed.
           status = 'Reviewing';
         } else {
