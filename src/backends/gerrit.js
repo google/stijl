@@ -66,7 +66,7 @@ export class GerritBackend {
         const tabId = tab.id;
         const checkFinish = () => chromeAsync.tabs.get(tabId).then((tab) => {
           if (!tab) {
-            return Promise.reject(new Error('Tab was closed'));
+            throw new Error('Tab was closed');
           }
 
           const a = document.createElement('a');
