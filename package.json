@@ -14,6 +14,7 @@
   "scripts": {
     "build": "browserify src/index.js -o extension/dashboard.js -t [ babelify --plugins [ transform-object-rest-spread ] --presets [ es2015 react ] ]",
     "watch": "watchify src/index.js -v -d -o extension/dashboard.js -t [ babelify --plugins [ transform-object-rest-spread ] --presets [ es2015 react ] ]",
+    "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -38,6 +39,8 @@
     "redux-thunk": "^2.1.0"
   },
   "devDependencies": {
+    "eslint": "^3.3.1",
+    "eslint-plugin-react": "^6.1.1",
     "watchify": "^3.7.0"
   }
 }

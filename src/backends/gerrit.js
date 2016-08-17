@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import chromeAsync from '../chromeasync'
-import * as util from '../util'
+import chromeAsync from '../chromeasync';
+import * as util from '../util';
 
 export class GerritBackend {
   constructor(site) {
@@ -34,14 +34,14 @@ export class GerritBackend {
     let changesUrl =
         this.site_['url'] +
         '/changes/?o=DETAILED_ACCOUNTS&o=REVIEWED&o=DETAILED_LABELS';
-    queries.forEach((query, i) => {
+    queries.forEach((query) => {
       changesUrl += '&q=' + encodeURIComponent(query);
     });
 
     return fetch(changesUrl, {credentials: 'include'})
       .then((res) => res.text())
       .then((text) => {
-        const data = JSON.parse(text.substring(text.indexOf('\n') + 1))
+        const data = JSON.parse(text.substring(text.indexOf('\n') + 1));
         return this.parseResponse_(data, selfAddress);
       });
   }

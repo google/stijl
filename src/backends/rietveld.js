@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-import chromeAsync from '../chromeasync'
-import * as util from '../util'
+import chromeAsync from '../chromeasync';
+import * as util from '../util';
 
 /**
  * The number of entries to be fetched.
@@ -87,7 +86,7 @@ export class RietveldBackend {
   doFetchOne_(issue) {
     const url = this.site_['url'] + '/api/' + issue + '?messages=True';
     return fetch(url, {credentials: 'include'}).then((res) => res.json());
-  };
+  }
 
   parseEntry_(entry, selfAddress) {
     let status;

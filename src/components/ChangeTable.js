@@ -139,6 +139,6 @@ class ChangeTable extends React.Component {
       </table>
     );
   }
-};
+}
 
 export default ChangeTable;

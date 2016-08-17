@@ -35,9 +35,9 @@ function promisify(thisArg, name) {
   return (...args) => new Promise((resolve, reject) => {
     api.call(thisArg, ...args, function(result) {
       if (chrome.runtime.lastError) {
-	// Fail.
-	reject(chrome.runtime.lastError);
-	return;
+        // Fail.
+        reject(chrome.runtime.lastError);
+        return;
       }
       // Success.
       resolve(result);

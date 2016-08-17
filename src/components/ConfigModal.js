@@ -190,7 +190,7 @@ class ConfigModalImpl extends React.Component {
       </Modal>
     );
   }
-};
+}
 
 const ConfigModal = ({ show, ...props }) => {
   if (!show) {
