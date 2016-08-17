@@ -12,28 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
+import chromeAsync from '../chromeasync'
+import * as util from '../util'
+
+/**
+ * The number of entries to be fetched.
+ * According to the API spec, this can be [0-1000], but practically, when
+ * setting this to 1000, the server returns 500 error.
+ */
+const entryLimit = 300;
+
 export class RietveldBackend {
   constructor(site) {
     this.site_ = site;
   }
 
   fetch() {
-    return this.ensureLogin_().then(this.fetchAll_.bind(this));
+    return this.ensureLogin_()
+      .then((selfAddress) => this.fetchAll_(selfAddress));
   }
 
   fetchAll_(selfAddress) {
     const searchPromises = [
       this.doSearch_(
-          'limit=1000&owner=' + selfAddress + '&closed=False',
+          'limit=' + entryLimit + '&owner=' + selfAddress + '&closed=False',
           selfAddress),
       this.doSearch_(
-          'limit=1000&reviewer=' + selfAddress + '&closed=False',
+          'limit=' + entryLimit + '&reviewer=' + selfAddress + '&closed=False',
           selfAddress),
       this.doSearch_(
-          'limit=1000&cc=' + selfAddress + '&closed=False',
+          'limit=' + entryLimit + '&cc=' + selfAddress + '&closed=False',
           selfAddress),
       this.doSearch_(
-          'limit=1000&owner=' + selfAddress + '&closed=True',
+          'limit=' + entryLimit + '&owner=' + selfAddress + '&closed=True',
           selfAddress)
     ];
     return Promise.all(searchPromises).then((changesFromSearches) => {
@@ -61,14 +73,14 @@ export class RietveldBackend {
         data['results'].forEach((entry) => {
           // For open review, we need detailed messages to decide approval state.
           const refetchPromise =
-                entry['closed'] && entry['reviewers'].length > 0 ?
-                Promise.resolve(entry) : this.doFetchOne_(entry['issue']);
+              entry['closed'] && entry['reviewers'].length > 0 ?
+              Promise.resolve(entry) : this.doFetchOne_(entry['issue']);
           const promise = refetchPromise.then((entry) => {
             return this.parseEntry_(entry, selfAddress);
           });
           promises.push(promise);
         });
-        return Promise.all(promises).then((changes) => changes);
+        return Promise.all(promises);
       });
   }
 
@@ -113,7 +125,7 @@ export class RietveldBackend {
         status = 'Pending';
       }
     }
-    const change = {
+    return {
       owned: entry['owner_email'] == selfAddress,
       reviewing: entry['reviewers'].indexOf(selfAddress) >= 0,
       subject: entry['subject'],
@@ -123,23 +135,20 @@ export class RietveldBackend {
       ownerName: entry['owner'],
       updated: new Date(entry['modified'] + ' UTC').getTime()
     };
-    return change;
   }
 
   ensureLogin_() {
-    return this.getSelfAddress_().then((selfAddress) => {
-      return selfAddress;
-    }, (err) => {
-      return this.login_().then(this.getSelfAddress_.bind(this));
-    });
+    return this.getSelfAddress_().catch((err) =>
+        this.login_().then(() => this.getSelfAddress_()));
   }
 
   getSelfAddress_() {
     return fetch(this.site_['url'], {credentials: 'include'})
-      .then((res) => res.text()).then((text) => {
+      .then((res) => res.text())
+      .then((text) => {
         const $doc = $(new DOMParser().parseFromString(text, 'text/html'));
         const selfAddress =
-              $doc.find('body > div[align=right] > b').text().split(' ')[0];
+            $doc.find('body > div[align=right] > b').text().split(' ')[0];
         if (!selfAddress) {
           throw new Error('Not logged in');
         }
@@ -151,30 +160,27 @@ export class RietveldBackend {
     return fetch(this.site_['url'], {credentials: 'include'})
       .then((res) => res.text()).then((text) => {
         const $doc = $(new DOMParser().parseFromString(text, 'text/html'));
-        const loginUrl = $doc.find('a:contains("Sign in")').first().attr('href');
-        return new Promise((resolve, reject) => {
-          chrome.tabs.create({url: loginUrl, active: true}, (tab) => {
-            const tabId = tab.id;
-            const checkFinish = () => {
-              chrome.tabs.get(tabId, (tab) => {
-                if (!tab) {
-                  reject(new Error('Tab was closed'));
-                } else {
-                  const a = document.createElement('a');
-                  a.href = tab.url;
-                  if (a.pathname == '/') {
-                    console.log('Login success');
-                    chrome.tabs.remove(tabId);
-                    resolve();
-                  } else {
-                    setTimeout(checkFinish, 100);
-                  }
-                }
-              });
-            };
-            checkFinish();
-          });
+        const loginUrl =
+            $doc.find('a:contains("Sign in")').first().attr('href');
+        return chromeAsync.tabs.create({url: loginUrl, active: true});
+      }).then((tab) => {
+        const tabId = tab.id;
+        const checkFinish = () => chromeAsync.tabs.get(tabId).then((tab) => {
+          if (!tab) {
+            throw new Error('Tab was closed');
+          }
+
+          const a = document.createElement('a');
+          a.href = tab.url;
+          if (a.pathname != '/') {
+            // Not yet logged in. Wait 100ms and retry.
+            return util.sleep(100).then(checkFinish);
+          }
+
+          console.log('Login success');
+          chrome.tabs.remove(tabId);
         });
+        return checkFinish();
       });
   }
 }
