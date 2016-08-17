@@ -15,6 +15,7 @@
     "build": "browserify src/index.js -o extension/dashboard.js -t [ babelify --plugins [ transform-object-rest-spread ] --presets [ es2015 react ] ]",
     "watch": "watchify src/index.js -v -d -o extension/dashboard.js -t [ babelify --plugins [ transform-object-rest-spread ] --presets [ es2015 react ] ]",
     "lint": "eslint src",
+    "travis": "npm run build && npm run lint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
