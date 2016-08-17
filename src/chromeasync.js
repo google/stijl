@@ -50,6 +50,19 @@ function promisify(thisArg, name) {
  * @const
  */
 const chromeAsync = {
+  permissions: {
+    request: promisify(chrome.permissions, 'request'),
+    contains: promisify(chrome.permissions, 'contains'),
+    remove: promisify(chrome.permissions, 'remove'),
+  },
+
+  storage: {
+    sync: {
+      get: promisify(chrome.storage.sync, 'get'),
+      set: promisify(chrome.storage.sync, 'set'),
+    },
+  },
+
   tabs: {
     create: promisify(chrome.tabs, 'create'),
     get: promisify(chrome.tabs, 'get'),

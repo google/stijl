@@ -13,24 +13,34 @@
 // limitations under the License.
 
 import * as actions from './actions';
+import chromeAsync from './chromeasync';
 
+/**
+ * Subscribes to the store. On config update, write it to the Chrome storage.
+ * @param {Store} Redux store to be subscribed.
+ */
 const subscribe = (store) => {
   let lastConfig = null;
   store.subscribe(() => {
     const { config } = store.getState();
     if (config !== lastConfig) {
       lastConfig = config;
-      chrome.storage.sync.set(config, () => {});
+      chromeAsync.storage.sync.set(config);
     }
   });
 };
 
+/**
+ * Initializes the persistence of the config data.
+ * Loads the store data from the Chrome storage. Also, subscribe to the store
+ * to save the config whenever updated.
+ * @param {Store} Redux store for the application.
+ * @returns {Promise} Resolved when the data is loaded and subscription is
+ *     done.
+ */
 export const init = (store) => {
-  return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(null, (config) => {
-      store.dispatch(actions.updateConfig(config));
-      subscribe(store);
-      resolve();
-    });
+  return chromeAsync.storage.sync.get(null).then((config) => {
+    store.dispatch(actions.updateConfig(config));
+    subscribe(store);
   });
 };
