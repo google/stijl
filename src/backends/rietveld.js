@@ -70,7 +70,8 @@ export class RietveldBackend {
       .then((res) => res.json()).then((data) => {
         const promises = [];
         data['results'].forEach((entry) => {
-          // For open review, we need detailed messages to decide approval state.
+          // For open review, we need detailed messages to decide approval
+          // state.
           const refetchPromise =
               entry['closed'] && entry['reviewers'].length > 0 ?
               Promise.resolve(entry) : this.doFetchOne_(entry['issue']);

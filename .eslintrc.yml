@@ -28,6 +28,19 @@ rules:
   no-unused-vars:
     - error
     - args: none
+  max-len:
+    - error
+    - code: 80
+  no-new-object:
+    - error
+  no-array-constructor:
+    - error
+  no-new-wrappers:
+    - error
+  no-multi-str:
+    - error
+  no-with:
+    - error
   react/jsx-uses-react:
     - error
   react/jsx-uses-vars:
