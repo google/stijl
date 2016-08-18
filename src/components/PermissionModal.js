@@ -25,7 +25,9 @@ const PermissionModal = ({ show, sites, onContinue }) => (
       Please click the continue button and you will be asked for permissions.
     </Modal.Body>
     <Modal.Footer>
-      <Button bsStyle="primary" onClick={() => onContinue(sites)}>Continue</Button>
+      <Button bsStyle="primary" onClick={() => onContinue(sites)}>
+        Continue
+      </Button>
     </Modal.Footer>
   </Modal>
 );

@@ -99,7 +99,7 @@ export const refreshAll = () => {
           dispatch(finishRefreshSite(site.label, false));
           console.error(err);
         });
-      })
+      });
     }, () => {
       dispatch(showPermissionModal());
     });

@@ -54,7 +54,8 @@ const SpacingRow = () => (
 );
 
 const ChangeSubtable = ({ caption, changes }) => {
-  const rows = changes.map((change) => <ChangeRow key={change.url} change={change} />);
+  const rows = changes.map(
+      (change) => <ChangeRow key={change.url} change={change} />);
   return (
     <tbody style={{ borderTop: '0' }}>
       <HeaderRow>{ caption }</HeaderRow>
@@ -108,7 +109,8 @@ class ChangeTable extends React.Component {
       });
     });
     return (
-      <table className="table table-hover table-bordered table-condensed review-table">
+      <table className="table table-hover table-bordered table-condensed
+                        review-table">
         <colgroup>
           <col style={{ width: 'auto' }} />
           <col style={{ width: '110px' }} />
@@ -139,6 +141,6 @@ class ChangeTable extends React.Component {
       </table>
     );
   }
-};
+}
 
 export default ChangeTable;

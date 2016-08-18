@@ -1,0 +1,52 @@
+# TODO: Adopt Google JS style once it covers ES6.
+env:
+  browser: true
+  es6: true
+  jquery: true
+  webextensions: true
+extends: 'eslint:recommended'
+parserOptions:
+  ecmaFeatures:
+    experimentalObjectRestSpread: true
+    jsx: true
+  sourceType: module
+plugins:
+  - react
+rules:
+  indent:
+    - error
+    - 2
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  no-unused-vars:
+    - error
+    - args: none
+  max-len:
+    - error
+    - code: 80
+  no-new-object:
+    - error
+  no-array-constructor:
+    - error
+  no-new-wrappers:
+    - error
+  no-multi-str:
+    - error
+  no-with:
+    - error
+  react/jsx-uses-react:
+    - error
+  react/jsx-uses-vars:
+    - error
+  # Stijl specific: Allow printing to console since it's useful for end users
+  # to report bugs. Note that "end" users of this extension are actually
+  # developers :)
+  no-console:
+    - off

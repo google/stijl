@@ -137,7 +137,8 @@ class ConfigModalImpl extends React.Component {
                   label={site.label}
                   url={site.url}
                   type={site.type}
-                  onFormChange={(key, value) => this.changeSite(index, key, value)}
+                  onFormChange={
+                    (key, value) => this.changeSite(index, key, value)}
                   onRemove={() => this.removeSite(index)} />
       );
     });
@@ -190,7 +191,7 @@ class ConfigModalImpl extends React.Component {
       </Modal>
     );
   }
-};
+}
 
 const ConfigModal = ({ show, ...props }) => {
   if (!show) {

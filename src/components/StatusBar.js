@@ -16,9 +16,12 @@ import React from 'react';
 
 const StatusBar = ({ activeSites, onConfig }) => {
   const indicators = Object.values(activeSites).map((site) => {
-    const color = (site.loading ? 'warning' : site.success ? 'success' : 'danger');
+    const color = (
+        site.loading ? 'warning' : site.success ? 'success' : 'danger');
     return (
-      <span key={site.label} className={`label label-${color}`} style={{ margin: '1px' }}>
+      <span key={site.label}
+            className={`label label-${color}`}
+            style={{ margin: '1px' }}>
         <a href={site.url} target="_blank" style={{ color: 'white' }}>
           {site.label}
         </a>
@@ -31,11 +34,15 @@ const StatusBar = ({ activeSites, onConfig }) => {
   return (
     <div className="well well-sm">
       Sites: {' '}
-      <div style={{ display: 'inline-block', position: 'relative', top: '-2px' }}>
+      <div style={{ display: 'inline-block',
+                    position: 'relative',
+                    top: '-2px' }}>
         {indicators}
       </div>
       {spinner}
-      <a href="javascript:void(0)" style={{ color: 'inherit', float: 'right' }} onClick={onConfig}>
+      <a href="javascript:void(0)"
+         style={{ color: 'inherit', float: 'right' }}
+         onClick={onConfig}>
         <span className="glyphicon glyphicon-cog"></span>
       </a>
     </div>

@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-import chromeAsync from '../chromeasync'
-import * as util from '../util'
+import chromeAsync from '../chromeasync';
+import * as util from '../util';
 
 /**
  * The number of entries to be fetched.
@@ -71,7 +70,8 @@ export class RietveldBackend {
       .then((res) => res.json()).then((data) => {
         const promises = [];
         data['results'].forEach((entry) => {
-          // For open review, we need detailed messages to decide approval state.
+          // For open review, we need detailed messages to decide approval
+          // state.
           const refetchPromise =
               entry['closed'] && entry['reviewers'].length > 0 ?
               Promise.resolve(entry) : this.doFetchOne_(entry['issue']);
@@ -87,7 +87,7 @@ export class RietveldBackend {
   doFetchOne_(issue) {
     const url = this.site_['url'] + '/api/' + issue + '?messages=True';
     return fetch(url, {credentials: 'include'}).then((res) => res.json());
-  };
+  }
 
   parseEntry_(entry, selfAddress) {
     let status;

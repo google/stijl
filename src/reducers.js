@@ -17,38 +17,39 @@ import partialUpdate from 'react-addons-update';
 
 import * as actions from './actions';
 
+// eslint-disable-next-line no-unused-vars
 const EXAMPLE_STATE = {
   config: {
     sites: [
       {
-        label: "Label of the code review site",
-        url: "URL of the code review site top page",
-        type: "gerrit/rietveld",
+        label: 'Label of the code review site',
+        url: 'URL of the code review site top page',
+        type: 'gerrit/rietveld',
       },
       // ....
     ],
   },
-  modal: "permission/config/null",
+  modal: 'permission/config/null',
   activeSites: [
     {
-      label: "Label of the code review site",
-      url: "URL of the code review site top page",
-      type: "gerrit/rietveld",
-      loading: "true if loading from the site",
-      success: "true if loading suceeded",
+      label: 'Label of the code review site',
+      url: 'URL of the code review site top page',
+      type: 'gerrit/rietveld',
+      loading: 'true if loading from the site',
+      success: 'true if loading suceeded',
     },
     // ...
   ],
   activeChangesBySite: {
     siteLabel: {
-      owned: "true if the change is owned by the user",
-      reviewing: "true if the user is in the reviewer list",
-      subject: "Subject of the code review",
-      url: "URL of the code review entry",
-      status: "Pending/Reviewing/Approved/Submitted",
-      repository: "Description of the repository",
-      ownerName: "Name of the change owner",
-      updated: "milliseconds from UNIX epoch",
+      owned: 'true if the change is owned by the user',
+      reviewing: 'true if the user is in the reviewer list',
+      subject: 'Subject of the code review',
+      url: 'URL of the code review entry',
+      status: 'Pending/Reviewing/Approved/Submitted',
+      repository: 'Description of the repository',
+      ownerName: 'Name of the change owner',
+      updated: 'milliseconds from UNIX epoch',
     },
     // ...
   },
