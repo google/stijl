@@ -37,7 +37,7 @@ const wrapChromeApi = (api, sites) => {
     if (!result)
       throw new Error('Failed');
   });
-}
+};
 
 /**
  * Requests the permission to access the sites.
