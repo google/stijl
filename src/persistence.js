@@ -17,7 +17,7 @@ import chromeAsync from './chromeasync';
 
 /**
  * Subscribes to the store. On config update, write it to the Chrome storage.
- * @param {Store} Redux store to be subscribed.
+ * @param {Store} store - Redux store to be subscribed.
  */
 const subscribe = (store) => {
   let lastConfig = null;
@@ -34,9 +34,9 @@ const subscribe = (store) => {
  * Initializes the persistence of the config data.
  * Loads the store data from the Chrome storage. Also, subscribe to the store
  * to save the config whenever updated.
- * @param {Store} Redux store for the application.
- * @returns {Promise} Resolved when the data is loaded and subscription is
- *     done.
+ * @param {Store} store - Redux store for the application.
+ * @returns {Promise<undefined>} Resolved when the data is loaded and
+ *     subscription is done.
  */
 export const init = (store) => {
   return chromeAsync.storage.sync.get(null).then((config) => {

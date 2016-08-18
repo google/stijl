@@ -25,11 +25,12 @@ const getOrigin = (site) => {
 };
 
 /**
- * @param {Promise} api - Promisified chrome API. See also chromeasync module.
+ * @param {function(Permissions): Promise<boolean>} api - Promisified chrome
+ *     permission API. See also chromeasync module.
  *     The wrapped API needs to take a callback whose argument is bool
  *     representing success or fail.
  * @param {{url: string}[]} sites - Array of site objects.
- * @returns {Promise} Resolved on success, or rejected on fail.
+ * @returns {Promise<undefined>} Resolved on success, or rejected on fail.
  */
 const wrapChromeApi = (api, sites) => {
   return api({origins: sites.map(getOrigin)}).then((result) => {
@@ -41,8 +42,8 @@ const wrapChromeApi = (api, sites) => {
 /**
  * Requests the permission to access the sites.
  * @param {{url: string}[]} sites - Array of site objects.
- * @return {Promise} Resolved if the permission is successfully granted.
- *     Otherwise rejected.
+ * @return {Promise<undefined>} Resolved if the permission is successfully
+ *     granted. Otherwise rejected.
  */
 export const request = (sites) => {
   return wrapChromeApi(chromeAsync.permissions.request, sites);
@@ -51,7 +52,7 @@ export const request = (sites) => {
 /**
  * Checks if the permission to access the sites is granted.
  * @param {{url: string}[]} sites - Array of site objects.
- * @return {Promise} Resolved if the extension has the permission.
+ * @return {Promise<undefined>} Resolved if the extension has the permission.
  *     Otherwise rejected.
  */
 export const check = (sites) => {
@@ -61,7 +62,7 @@ export const check = (sites) => {
 /**
  * Revokes the permission to access the sites.
  * @param {{url: string}[]} sites - Array of site objects.
- * @return {Promise} Resolved if the permission is already granted.
+ * @return {Promise<undefined>} Resolved if the permission is already granted.
  *     Otherwise rejected.
  */
 export const revoke = (sites) => {
