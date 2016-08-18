@@ -12,34 +12,59 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const makeChromeCall = (method, sites) => {
-  return new Promise((resolve, reject) => {
-    const origins = sites.map((site) => {
-      const a = document.createElement('a');
-      a.href = site['url'];
-      return a.origin + '/';
-    });
-    method({origins: origins}, (granted) => {
-      if (granted) {
-        resolve();
-      } else {
-        reject();
-      }
-    });
+import chromeAsync from './chromeasync';
+
+/**
+ * @param {{url: string}} site - URL.
+ * @return {string} The origin of the given site.
+ */
+const getOrigin = (site) => {
+  const a = document.createElement('a');
+  a.href = site.url;
+  return a.origin + '/';
+};
+
+/**
+ * @param {function(Permissions): Promise<boolean>} api - Promisified chrome
+ *     permission API. See also chromeasync module.
+ *     The wrapped API needs to take a callback whose argument is bool
+ *     representing success or fail.
+ * @param {{url: string}[]} sites - Array of site objects.
+ * @returns {Promise<undefined>} Resolved on success, or rejected on fail.
+ */
+const wrapChromeApi = (api, sites) => {
+  return api({origins: sites.map(getOrigin)}).then((result) => {
+    if (!result)
+      throw new Error('Failed');
   });
-};
+}
 
+/**
+ * Requests the permission to access the sites.
+ * @param {{url: string}[]} sites - Array of site objects.
+ * @return {Promise<undefined>} Resolved if the permission is successfully
+ *     granted. Otherwise rejected.
+ */
 export const request = (sites) => {
-  return makeChromeCall(
-      chrome.permissions.request.bind(chrome.permissions), sites);
+  return wrapChromeApi(chromeAsync.permissions.request, sites);
 };
 
+/**
+ * Checks if the permission to access the sites is granted.
+ * @param {{url: string}[]} sites - Array of site objects.
+ * @return {Promise<undefined>} Resolved if the extension has the permission.
+ *     Otherwise rejected.
+ */
 export const check = (sites) => {
-  return makeChromeCall(
-      chrome.permissions.contains.bind(chrome.permissions), sites);
+  return wrapChromeApi(chromeAsync.permissions.contains, sites);
 };
 
+/**
+ * Revokes the permission to access the sites.
+ * @param {{url: string}[]} sites - Array of site objects.
+ * @return {Promise<undefined>} Resolved if the permission is already granted.
+ *     Otherwise rejected.
+ */
 export const revoke = (sites) => {
-  return makeChromeCall(
-      chrome.permissions.remove.bind(chrome.permissions), sites);
+  return wrapChromeApi(chromeAsync.permissions.remove, sites);
 };
