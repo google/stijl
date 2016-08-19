@@ -45,10 +45,3 @@ const App = () => (
 );
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-// Show "dev" badge if the extension is installed as an unpacked extension.
-chrome.management.getSelf((info) => {
-  if (info.installType === 'development') {
-    chrome.browserAction.setBadgeText({text: 'dev'});
-  }
-});
