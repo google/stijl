@@ -13,7 +13,9 @@
 // limitations under the License.
 
 import chromeAsync from '../chromeasync';
+import * as state from '../state';
 import * as util from '../util';
+
 
 /**
  * The number of entries to be fetched.
@@ -108,9 +110,9 @@ export class RietveldBackend {
     if (entry['closed']) {
       // This might be true only on codereview.chromium.org...
       if (entry['description'].indexOf('\nCommitted: ') > 0) {
-        status = 'Submitted';
+        status = state.ChangeStatus.SUBMITTED;
       } else {
-        status = 'Abandoned';
+        status = state.ChangeStatus.ABANDONED;
       }
     } else {
       if (entry['reviewers'].length > 0) {
@@ -131,12 +133,12 @@ export class RietveldBackend {
           }
         });
         if (approved) {
-          status = 'Approved';
+          status = state.ChangeStatus.APPROVED;
         } else {
-          status = 'Reviewing';
+          status = state.ChangeStatus.REVIEWING;
         }
       } else {
-        status = 'Pending';
+        status = state.ChangeStatus.PENDING;
       }
     }
     return {

@@ -14,12 +14,34 @@
 
 import { GerritBackend } from './backends/gerrit';
 import { RietveldBackend } from './backends/rietveld';
+import * as state from './state';
 
+/**
+ * Connects to the backend server to fetch the changes.
+ * @record
+ */
+// eslint-disable-next-line no-unused-vars
+class BackendInterface {
+  /**
+   * @return {Promise.<Chagne[]>} Resolved when the all active changes are
+   *     loaded.
+   */
+  fetch() {}
+}
+
+/**
+ * Creates the backend instance for the given |site|.
+ * @param {Site} site - The target site info.
+ * @return {BackendInterface} Backend instance for the site.
+ */
 export const create = (site) => {
-  if (site['type'] == 'gerrit') {
-    return new GerritBackend(site);
-  } else if (site['type'] == 'rietveld') {
-    return new RietveldBackend(site);
+  switch (site.type) {
+    case state.SiteType.GERRIT:
+      return new GerritBackend(site);
+    case state.SiteType.RIETVELD:
+      return new RietveldBackend(site);
+    default:
+      // Unknown site type. Return null.
+      return null;
   }
-  return null;
 };
