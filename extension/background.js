@@ -18,3 +18,10 @@ chrome.browserAction.onClicked.addListener(function(e) {
     active: true
   });
 });
+
+// Show "dev" badge if the extension is installed as an unpacked extension.
+chrome.management.getSelf(function(info) {
+  if (info.installType === 'development') {
+    chrome.browserAction.setBadgeText({text: 'dev'});
+  }
+});
