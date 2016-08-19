@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import chromeAsync from '../chromeasync';
+import * as state from '../state';
 import * as util from '../util';
 
 export class GerritBackend {
@@ -97,23 +98,23 @@ export class GerritBackend {
     let status;
     if (entry['status'] == 'NEW' || entry['status'] == 'DRAFT') {
       if (entry['submittable']) {
-        status = 'Approved';
+        status = state.ChangeStatus.APPROVED;
       } else {
         const reviewers = entry['labels']['Code-Review']['all'] || [];
         const ownerId = entry['owner']['_account_id'];
         if (reviewers.find((user) => user['_account_id'] != ownerId) >= 0) {
           // Here non-owner user is listed.
-          status = 'Reviewing';
+          status = state.ChangeStatus.REVIEWING;
         } else {
-          status = 'Pending';
+          status = state.ChangeStatus.PENDING;
         }
       }
     } else if (entry['status'] == 'SUBMITTED' || entry['status'] == 'MERGED') {
-      status = 'Submitted';
+      status = state.ChangeStatus.SUBMITTED;
     } else if (entry['status'] == 'ABANDONED') {
-      status = 'Abandoned';
+      status = state.ChangeStatus.ABANDONED;
     } else {
-      status = 'Unknown';
+      status = state.ChangeStatus.UNKNOWN;
     }
     return {
       owned: entry['owner']['email'] == selfAddress,
