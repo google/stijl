@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Preset sites.
 export const PRESETS = [
   {
     name: 'Chromium',
@@ -26,3 +27,6 @@ export const PRESETS = [
     type: 'gerrit',
   },
 ];
+
+/** Google Analytics Tracking ID. */
+export const GOOGLE_ANALYTICS_TRACKING_ID = 'UA-69761330-1';
