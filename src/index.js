@@ -20,9 +20,11 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import * as Redux from 'redux';
 import ReduxThunk from 'redux-thunk';
+import UniversalAnalytics from 'universal-analytics';
 
 import * as actions from './actions';
 import Dashboard from './components/Dashboard';
+import * as constants from './constants';
 import * as persistence from './persistence';
 import * as reducers from './reducers';
 
@@ -45,3 +47,7 @@ const App = () => (
 );
 
 ReactDOM.render(<App />, document.getElementById('root'));
+
+const visitor =
+      UniversalAnalytics(constants.GOOGLE_ANALYTICS_TRACKING_ID, {https: true});
+visitor.pageview('/dashboard.html').send();
