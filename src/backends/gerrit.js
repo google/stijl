@@ -13,11 +13,13 @@
 // limitations under the License.
 
 import chromeAsync from '../chromeasync';
-import * as state from '../state';
+import * as states from '../states';
 import * as util from '../util';
+import { BackendInterface } from './backendinterface';
 
-export class GerritBackend {
+export class GerritBackend extends BackendInterface {
   constructor(site) {
+    super();
     this.site_ = site;
   }
 
@@ -98,23 +100,23 @@ export class GerritBackend {
     let status;
     if (entry['status'] == 'NEW' || entry['status'] == 'DRAFT') {
       if (entry['submittable']) {
-        status = state.ChangeStatus.APPROVED;
+        status = states.ChangeStatus.APPROVED;
       } else {
         const reviewers = entry['labels']['Code-Review']['all'] || [];
         const ownerId = entry['owner']['_account_id'];
         if (reviewers.find((user) => user['_account_id'] != ownerId) >= 0) {
           // Here non-owner user is listed.
-          status = state.ChangeStatus.REVIEWING;
+          status = states.ChangeStatus.REVIEWING;
         } else {
-          status = state.ChangeStatus.PENDING;
+          status = states.ChangeStatus.PENDING;
         }
       }
     } else if (entry['status'] == 'SUBMITTED' || entry['status'] == 'MERGED') {
-      status = state.ChangeStatus.SUBMITTED;
+      status = states.ChangeStatus.SUBMITTED;
     } else if (entry['status'] == 'ABANDONED') {
-      status = state.ChangeStatus.ABANDONED;
+      status = states.ChangeStatus.ABANDONED;
     } else {
-      status = state.ChangeStatus.UNKNOWN;
+      status = states.ChangeStatus.UNKNOWN;
     }
     return {
       owned: entry['owner']['email'] == selfAddress,
