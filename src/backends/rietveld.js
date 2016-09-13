@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import chromeAsync from '../chromeasync';
-import * as state from '../state';
+import * as states from '../states';
 import * as util from '../util';
-
+import { BackendInterface } from './backendinterface';
 
 /**
  * The number of entries to be fetched.
@@ -24,8 +24,9 @@ import * as util from '../util';
  */
 const entryLimit = 300;
 
-export class RietveldBackend {
+export class RietveldBackend extends BackendInterface {
   constructor(site) {
+    super();
     this.site_ = site;
   }
 
@@ -110,9 +111,9 @@ export class RietveldBackend {
     if (entry['closed']) {
       // This might be true only on codereview.chromium.org...
       if (entry['description'].indexOf('\nCommitted: ') > 0) {
-        status = state.ChangeStatus.SUBMITTED;
+        status = states.ChangeStatus.SUBMITTED;
       } else {
-        status = state.ChangeStatus.ABANDONED;
+        status = states.ChangeStatus.ABANDONED;
       }
     } else {
       if (entry['reviewers'].length > 0) {
@@ -133,12 +134,12 @@ export class RietveldBackend {
           }
         });
         if (approved) {
-          status = state.ChangeStatus.APPROVED;
+          status = states.ChangeStatus.APPROVED;
         } else {
-          status = state.ChangeStatus.REVIEWING;
+          status = states.ChangeStatus.REVIEWING;
         }
       } else {
-        status = state.ChangeStatus.PENDING;
+        status = states.ChangeStatus.PENDING;
       }
     }
     return {

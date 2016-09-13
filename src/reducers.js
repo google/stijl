@@ -16,7 +16,7 @@ import * as Redux from 'redux';
 import partialUpdate from 'react-addons-update';
 
 import * as actions from './actions';
-import * as state_module from './state';
+import * as states from './states';
 
 const config = (state = {sites: []}, action) => {
   if (action.type == actions.UPDATE_CONFIG) {
@@ -37,9 +37,9 @@ const config = (state = {sites: []}, action) => {
 const modal = (state = null, action) => {
   switch (action.type) {
     case actions.SHOW_PERMISSION_MODAL:
-      return state_module.Modal.PERMISSIONS;
+      return states.Modal.PERMISSIONS;
     case actions.SHOW_CONFIG_MODAL:
-      return state_module.Modal.CONFIG;
+      return states.Modal.CONFIG;
     case actions.CLOSE_MODAL:
       return null;
     default:

@@ -12,23 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { GerritBackend } from './backends/gerrit';
-import { RietveldBackend } from './backends/rietveld';
-import * as state from './states';
-
 /**
- * Creates the backend instance for the given |site|.
- * @param {Site} site - The target site info.
- * @return {BackendInterface} Backend instance for the site.
+ * Connects to the backend server to fetch the changes.
+ * @record
  */
-export const create = (site) => {
-  switch (site.type) {
-    case state.SiteType.GERRIT:
-      return new GerritBackend(site);
-    case state.SiteType.RIETVELD:
-      return new RietveldBackend(site);
-    default:
-      // Unknown site type. Return null.
-      return null;
-  }
-};
+export class BackendInterface {
+  /**
+   * @return {Promise.<Change[]>} Resolved when the all active changes are
+   *     loaded.
+   */
+  fetch() {}
+}
