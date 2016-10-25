@@ -27,12 +27,26 @@ export class RietveldBackend {
     this.site_ = site;
   }
 
+  /**
+   * Fetches changes from this backend.
+   *
+   * @public
+   * @return {Promise<Change[]>} A list of changes.
+   */
   fetch() {
-    return this.ensureLogin_()
-      .then((selfAddress) => this.fetchAll_(selfAddress));
+    return this.ensureLogin_().then(
+      (selfAddress) => this.doFetch_(selfAddress));
   }
 
-  fetchAll_(selfAddress) {
+  /**
+   * Fetches changes from this backend.
+   *
+   * This function assumes the user is already logged in.
+   *
+   * @private
+   * @return {Promise<Change[]>} A list of changes.
+   */
+  doFetch_(selfAddress) {
     const searchPromises = [
       this.doSearch_(
           'limit=' + entryLimit + '&owner=' + selfAddress + '&closed=False',
@@ -137,11 +151,25 @@ export class RietveldBackend {
     };
   }
 
+  /**
+   * Log in to the code review site if we need.
+   *
+   * @private
+   * @return Promise<string> Promise to return the mail address of the user.
+   *   If login fails, the promise is rejected.
+   */
   ensureLogin_() {
-    return this.getSelfAddress_().catch((err) =>
-        this.login_().then(() => this.getSelfAddress_()));
+    return this.getSelfAddress_()
+      .catch(() => this.attemptManualLogin_());
   }
 
+  /**
+   * Returns the mail address of the user if they have already logged in.
+   *
+   * @private
+   * @return Promise<string> Promise to return the mail address of the user.
+   *   If the user is not logged in, the promise is rejected.
+   */
   getSelfAddress_() {
     return fetch(this.site_['url'], {credentials: 'include'})
       .then((res) => res.text())
@@ -156,7 +184,14 @@ export class RietveldBackend {
       });
   }
 
-  login_() {
+  /**
+   * Attempts login, showing tabs for manual interactions.
+   *
+   * @private
+   * @return Promise<string> Promise to return the mail address of the user.
+   *   If login fails, the promise is rejected.
+   */
+  attemptManualLogin_() {
     return fetch(this.site_['url'], {credentials: 'include'})
       .then((res) => res.text()).then((text) => {
         const $doc = $(new DOMParser().parseFromString(text, 'text/html'));
@@ -179,6 +214,7 @@ export class RietveldBackend {
 
           console.log('Login success');
           chrome.tabs.remove(tabId);
+          return this.getSelfAddress_();
         });
         return checkFinish();
       });

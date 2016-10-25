@@ -20,12 +20,26 @@ export class GerritBackend {
     this.site_ = site;
   }
 
+  /**
+   * Fetches changes from this backend.
+   *
+   * @public
+   * @return {Promise<Change[]>} A list of changes.
+   */
   fetch() {
     return this.ensureLogin_()
-      .then((selfAddress) => this.fetchAll_(selfAddress));
+      .then((selfAddress) => this.doFetch_(selfAddress));
   }
 
-  fetchAll_(selfAddress) {
+  /**
+   * Fetches changes from this backend.
+   *
+   * This function assumes the user is already logged in.
+   *
+   * @private
+   * @return {Promise<Change[]>} A list of changes.
+   */
+  doFetch_(selfAddress) {
     const queries = [
       'is:open owner:' + selfAddress,
       'is:open reviewer:' + selfAddress + ' -owner:' + selfAddress,
@@ -46,11 +60,25 @@ export class GerritBackend {
       });
   }
 
+  /**
+   * Log in to the code review site if we need.
+   *
+   * @private
+   * @return Promise<string> Promise to return the mail address of the user.
+   *   If login fails, the promise is rejected.
+   */
   ensureLogin_() {
-    return this.getSelfAddress_().catch((err) =>
-	this.login_().then(() => this.getSelfAddress_()));
+    return this.getSelfAddress_()
+      .catch(() => this.attemptManualLogin_());
   }
 
+  /**
+   * Returns the mail address of the user if they have already logged in.
+   *
+   * @private
+   * @return Promise<string> Promise to return the mail address of the user.
+   *   If the user is not logged in, the promise is rejected.
+   */
   getSelfAddress_() {
     const accountsUrl = this.site_['url'] + '/accounts/self';
     return fetch(accountsUrl, {credentials: 'include'})
@@ -59,7 +87,14 @@ export class GerritBackend {
         JSON.parse(text.substring(text.indexOf('\n') + 1)).email);
   }
 
-  login_() {
+  /**
+   * Attempts login, showing tabs for manual interactions.
+   *
+   * @private
+   * @return Promise<string> Promise to return the mail address of the user.
+   *   If login fails, the promise is rejected.
+   */
+  attemptManualLogin_() {
     const loginUrl = this.site_['url'] + '/login/';
     return chromeAsync.tabs.create({url: loginUrl, active: true})
       .then((tab) => {
@@ -78,6 +113,7 @@ export class GerritBackend {
 
           console.log('Login success');
           chrome.tabs.remove(tabId);
+          return this.getSelfAddress_();
         });
         return checkFinish();
       });
