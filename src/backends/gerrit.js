@@ -69,6 +69,7 @@ export class GerritBackend {
    */
   ensureLogin_() {
     return this.getSelfAddress_()
+      .catch(() => this.attemptAutoLogin_())
       .catch(() => this.attemptManualLogin_());
   }
 
@@ -85,6 +86,23 @@ export class GerritBackend {
       .then((res) => res.text())
       .then((text) =>
         JSON.parse(text.substring(text.indexOf('\n') + 1)).email);
+  }
+
+  /**
+   * Attempts login without user interaction.
+   *
+   * @private
+   * @return Promise<string> Promise to return the mail address of the user.
+   *   If login fails, the promise is rejected.
+   */
+  attemptAutoLogin_() {
+    const loginUrl = this.site_['url'] + '/login/';
+    // Set no-cors to follow redirects to other hosts (accounts.google.com).
+    // Note that we can't read the response of this request and thus can't know
+    // if it succeeded or not.
+    return fetch(
+      loginUrl, {mode: 'no-cors', credentials: 'include', redirect: 'follow'})
+      .then(() => this.getSelfAddress_());
   }
 
   /**
