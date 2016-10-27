@@ -84,26 +84,9 @@ export class RietveldBackend extends BackendInterface {
   doSearch_(param, selfAddress) {
     const url = this.site_['url'] + '/search?format=json&' + param;
     return fetch(url, {credentials: 'include'})
-      .then((res) => res.json()).then((data) => {
-        const promises = [];
-        data['results'].forEach((entry) => {
-          // For open review, we need detailed messages to decide approval
-          // state.
-          const refetchPromise =
-              entry['closed'] && entry['reviewers'].length > 0 ?
-              Promise.resolve(entry) : this.doFetchOne_(entry['issue']);
-          const promise = refetchPromise.then((entry) => {
-            return this.parseEntry_(entry, selfAddress);
-          });
-          promises.push(promise);
-        });
-        return Promise.all(promises);
-      });
-  }
-
-  doFetchOne_(issue) {
-    const url = this.site_['url'] + '/api/' + issue + '?messages=True';
-    return fetch(url, {credentials: 'include'}).then((res) => res.json());
+      .then((res) => res.json())
+      .then((data) => (
+        data['results'].map((entry) => this.parseEntry_(entry, selfAddress))));
   }
 
   parseEntry_(entry, selfAddress) {
@@ -117,27 +100,8 @@ export class RietveldBackend extends BackendInterface {
       }
     } else {
       if (entry['reviewers'].length > 0) {
-        // TODO: Improve approval check.
-        const messages = entry['messages'] || [];
-        const approvals = {};
-        messages.forEach((message) => {
-          if (message['disapproval']) {
-            approvals[message['sender']] = false;
-          } else if (message['approval']) {
-            approvals[message['sender']] = true;
-          }
-        });
-        let approved = false;
-        Object.keys(approvals).forEach((sender) => {
-          if (approvals[sender]) {
-            approved = true;
-          }
-        });
-        if (approved) {
-          status = states.ChangeStatus.APPROVED;
-        } else {
-          status = states.ChangeStatus.REVIEWING;
-        }
+        // TODO: Re-enable approval check.
+        status = 'Reviewing';
       } else {
         status = states.ChangeStatus.PENDING;
       }
