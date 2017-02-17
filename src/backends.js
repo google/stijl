@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { DemoBackend } from './backends/demo';
 import { GerritBackend } from './backends/gerrit';
 import { RietveldBackend } from './backends/rietveld';
 import * as states from './states';
@@ -23,6 +24,8 @@ import * as states from './states';
  */
 export const create = (site) => {
   switch (site.type) {
+    case states.SiteType.DEMO:
+      return new DemoBackend(site);
     case states.SiteType.GERRIT:
       return new GerritBackend(site);
     case states.SiteType.RIETVELD:

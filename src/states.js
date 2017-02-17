@@ -17,6 +17,7 @@
  * @enum {string}
  */
 export const SiteType = {
+  DEMO: 'demo',
   GERRIT: 'gerrit',
   RIETVELD: 'rietveld',
 };
