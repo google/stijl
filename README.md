@@ -4,6 +4,13 @@ Stijl
 Stijl is a Chrome extension showing all your code reviews in a single page.
 
 
+Installation
+------------
+
+Latest release of Stijl can be installed from
+[Chrome Web Store](https://chrome.google.com/webstore/detail/stijl/cpbiadoobgnpcacjecphfeoonpfccagk).
+
+
 How to Build
 ------------
 
