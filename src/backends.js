@@ -14,7 +14,7 @@
 
 import { GerritBackend } from './backends/gerrit';
 import { RietveldBackend } from './backends/rietveld';
-import * as state from './states';
+import * as states from './states';
 
 /**
  * Creates the backend instance for the given |site|.
@@ -23,9 +23,9 @@ import * as state from './states';
  */
 export const create = (site) => {
   switch (site.type) {
-    case state.SiteType.GERRIT:
+    case states.SiteType.GERRIT:
       return new GerritBackend(site);
-    case state.SiteType.RIETVELD:
+    case states.SiteType.RIETVELD:
       return new RietveldBackend(site);
     default:
       // Unknown site type. Return null.
