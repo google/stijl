@@ -12,7 +12,8 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "build": "browserify src/index.js -o extension/dashboard.js -t [ babelify --plugins [ transform-object-rest-spread ] --presets [ es2015 react ] ]",
+    "build": "rm -f stijl.zip && git clean -fdx extension && npm run build-js && cd extension && zip -r ../stijl.zip .",
+    "build-js": "browserify src/index.js -o extension/dashboard.js -t [ babelify --plugins [ transform-object-rest-spread ] --presets [ es2015 react ] ]",
     "watch": "watchify src/index.js -v -d -o extension/dashboard.js -t [ babelify --plugins [ transform-object-rest-spread ] --presets [ es2015 react ] ]",
     "lint": "eslint src",
     "travis": "npm run build && npm run lint",
