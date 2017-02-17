@@ -18,6 +18,7 @@ import ChangeTableContainer from '../containers/ChangeTableContainer';
 import ConfigModalContainer from '../containers/ConfigModalContainer';
 import PermissionModalContainer from '../containers/PermissionModalContainer';
 import StatusBarContainer from '../containers/StatusBarContainer';
+import Footer from '../components/Footer';
 
 const Dashboard = () => (
   <div className="container-fluid">
@@ -32,6 +33,7 @@ const Dashboard = () => (
     </div>
     <ConfigModalContainer />
     <PermissionModalContainer />
+    <Footer />
   </div>
 );
 

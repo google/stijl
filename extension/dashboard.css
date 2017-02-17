@@ -52,3 +52,7 @@
   background-color: #888;
   border: 0;
 }
+.page-footer {
+  text-align: right;
+  color: #bdbdbd;
+}

@@ -25,29 +25,37 @@ import UniversalAnalytics from 'universal-analytics';
 import * as actions from './actions';
 import Dashboard from './components/Dashboard';
 import * as constants from './constants';
+import * as globals from './globals';
 import * as persistence from './persistence';
 import * as reducers from './reducers';
 
-const store = Redux.createStore(
-  reducers.rootReducer,
-  Redux.applyMiddleware(ReduxThunk));
+const main = () => {
+  const store = Redux.createStore(
+    reducers.rootReducer,
+    Redux.applyMiddleware(ReduxThunk));
 
-persistence.init(store).then(() => {
-  if (store.getState().config.sites.length == 0) {
-    store.dispatch(actions.showConfigModal());
-  } else {
-    store.dispatch(actions.refreshAll());
-  }
-});
+  persistence.init(store).then(() => {
+    if (store.getState().config.sites.length == 0) {
+      store.dispatch(actions.showConfigModal());
+    } else {
+      store.dispatch(actions.refreshAll());
+    }
+  });
 
-const App = () => (
-  <Provider store={store}>
+  const App = () => (
+    <Provider store={store}>
     <Dashboard />
-  </Provider>
-);
+    </Provider>
+  );
 
-ReactDOM.render(<App />, document.getElementById('root'));
+  ReactDOM.render(<App />, document.getElementById('root'));
 
-const visitor =
-      UniversalAnalytics(constants.GOOGLE_ANALYTICS_TRACKING_ID, {https: true});
-visitor.pageview('/dashboard.html').send();
+  const visitor =
+    UniversalAnalytics(constants.GOOGLE_ANALYTICS_TRACKING_ID, {https: true});
+  visitor.pageview('/dashboard.html').send();
+};
+
+chrome.management.getSelf((extensionInfo) => {
+  globals.extensionInfo = extensionInfo;
+  main();
+});
