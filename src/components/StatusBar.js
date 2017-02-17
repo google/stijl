@@ -34,9 +34,11 @@ const StatusBar = ({ activeSites, onConfig }) => {
   return (
     <div className="well well-sm">
       Sites: {' '}
-      <div style={{ display: 'inline-block',
-                    position: 'relative',
-                    top: '-2px' }}>
+      <div style={{
+        display: 'inline-block',
+        position: 'relative',
+        top: '-2px',
+      }}>
         {indicators}
       </div>
       {spinner}
