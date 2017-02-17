@@ -14,7 +14,7 @@ Latest release of Stijl can be installed from
 Screenshot
 ----------
 
-[![Screenshot](https://raw.githubusercontent.com/google/stijl/master/misc/screenshot1.png)](https://raw.githubusercontent.com/google/stijl/master/misc/screenshot1.png)
+![Screenshot](https://raw.githubusercontent.com/google/stijl/master/misc/screenshot1.png)
 
 
 How to Build
