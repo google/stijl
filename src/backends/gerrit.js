@@ -127,7 +127,7 @@ export class GerritBackend extends BackendInterface {
 
           const a = document.createElement('a');
           a.href = tab.url;
-          if (a.pathname != '/') {
+          if (!(a.pathname == '/' || a.pathname.indexOf('/dashboard/') == 0)) {
             // Not yet logged in. Wait 100ms and retry.
             return util.sleep(100).then(checkFinish);
           }
