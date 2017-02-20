@@ -159,7 +159,8 @@ export class GerritBackend extends BackendInterface {
         const reviewMetadata = entry['labels']['Code-Review'] || {};
         const reviewers = reviewMetadata['all'] || [];
         const ownerId = entry['owner']['_account_id'];
-        if (reviewers.find((user) => user['_account_id'] != ownerId) >= 0) {
+        if (reviewers.findIndex(
+              (user) => user['_account_id'] != ownerId) >= 0) {
           // Here non-owner user is listed.
           status = states.ChangeStatus.REVIEWING;
         } else {
