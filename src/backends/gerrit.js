@@ -49,8 +49,8 @@ export class GerritBackend extends BackendInterface {
       'is:merged owner:' + selfAddress + ' limit:20'
     ];
     let changesUrl =
-        this.site_['url'] +
-        '/changes/?o=DETAILED_ACCOUNTS&o=REVIEWED&o=DETAILED_LABELS';
+        this.site_['url'] + '/changes/' +
+        '?o=DETAILED_ACCOUNTS&o=REVIEWED&o=DETAILED_LABELS&o=SUBMITTABLE';
     queries.forEach((query) => {
       changesUrl += '&q=' + encodeURIComponent(query);
     });
