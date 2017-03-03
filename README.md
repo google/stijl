@@ -1,7 +1,7 @@
 Stijl
 =====
 
-Stijl is a Chrome extension showing all your code reviews in a single page.
+Stijl is a Chrome extension to show all your code reviews across multiple code review websites.
 
 
 Installation
