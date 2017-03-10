@@ -156,8 +156,8 @@ export class GerritBackend extends BackendInterface {
       if (entry['submittable']) {
         status = states.ChangeStatus.APPROVED;
       } else {
-        const reviewMetadata = entry['labels']['Code-Review'] || {};
-        const reviewers = reviewMetadata['all'] || [];
+        const reviewersAll = entry['reviewers'] || {}
+        const reviewers = reviewersAll['REVIEWER'] || [];
         const ownerId = entry['owner']['_account_id'];
         if (reviewers.findIndex(
               (user) => user['_account_id'] != ownerId) >= 0) {
