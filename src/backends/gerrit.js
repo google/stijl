@@ -156,7 +156,7 @@ export class GerritBackend extends BackendInterface {
       if (entry['submittable']) {
         status = states.ChangeStatus.APPROVED;
       } else {
-        const reviewersAll = entry['reviewers'] || {}
+        const reviewersAll = entry['reviewers'] || {};
         const reviewers = reviewersAll['REVIEWER'] || [];
         const ownerId = entry['owner']['_account_id'];
         if (reviewers.findIndex(
