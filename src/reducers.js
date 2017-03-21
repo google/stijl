@@ -37,7 +37,7 @@ const config = (state = {sites: []}, action) => {
 const modal = (state = null, action) => {
   switch (action.type) {
     case actions.SHOW_PERMISSION_MODAL:
-      return states.Modal.PERMISSIONS;
+      return states.Modal.PERMISSION;
     case actions.SHOW_CONFIG_MODAL:
       return states.Modal.CONFIG;
     case actions.CLOSE_MODAL:
