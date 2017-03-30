@@ -29,4 +29,4 @@ export const PRESETS = [
 ];
 
 /** Google Analytics Tracking ID. */
-export const GOOGLE_ANALYTICS_TRACKING_ID = 'UA-69761330-1';
+export const GOOGLE_ANALYTICS_TRACKING_ID = 'UA-96455136-1';
