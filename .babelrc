@@ -1,0 +1,15 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "chrome": 63
+      }
+    }],
+    "react"
+  ],
+  "plugins": [
+    ["transform-object-rest-spread", {
+      "useBuiltIns": true
+    }]
+  ]
+}

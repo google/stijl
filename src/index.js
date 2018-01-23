@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// This must come first.
-import 'babel-polyfill';
-
 import React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
