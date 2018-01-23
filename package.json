@@ -1,6 +1,6 @@
 {
   "name": "stijl",
-  "version": "0.5.0",
+  "version": "1.0.6",
   "description": "Chrome extension showing all your code reviews in a single page.",
   "homepage": "https://github.com/google/stijl",
   "bugs": {
