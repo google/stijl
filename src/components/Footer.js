@@ -19,7 +19,7 @@ import * as globals from '../globals';
 const Footer = () => {
   const version =
     globals.extensionInfo.installType === 'development' ?
-    'dev' : `v${globals.extensionInfo.version}`;
+      'dev' : `v${globals.extensionInfo.version}`;
   return (
     <footer className="page-footer" style={{ marginTop: '-18px' }}>
       <span>Stijl ({version}).</span>
@@ -27,8 +27,8 @@ const Footer = () => {
       <span>Code is on</span>
       {' '}
       <a href="https://github.com/google/stijl/"
-         target="_blank"
-         style={{ color: 'inherit' }}>
+        target="_blank"
+        style={{ color: 'inherit' }}>
         GitHub
       </a>.
     </footer>

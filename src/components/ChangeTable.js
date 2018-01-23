@@ -55,7 +55,7 @@ const SpacingRow = () => (
 
 const ChangeSubtable = ({ caption, changes }) => {
   const rows = changes.map(
-      (change) => <ChangeRow key={change.url} change={change} />);
+    (change) => <ChangeRow key={change.url} change={change} />);
   return (
     <tbody style={{ borderTop: '0' }}>
       <HeaderRow>{ caption }</HeaderRow>

@@ -28,28 +28,28 @@ const SiteLine = ({ index, label, url, type, onFormChange, onRemove }) => (
   <div className="config-modal-site-line">
     {index + 1}. {' '}
     <input type="text"
-           className="form-control"
-           placeholder="Label"
-           style={{ display: 'inline-block', width: '120px' }}
-           value={label}
-           onChange={(e) => onFormChange('label', e.target.value)} />
+      className="form-control"
+      placeholder="Label"
+      style={{ display: 'inline-block', width: '120px' }}
+      value={label}
+      onChange={(e) => onFormChange('label', e.target.value)} />
     <input type="text"
-           className="form-control"
-           placeholder="URL"
-           style={{ display: 'inline-block', width: '300px' }}
-           value={url}
-           onChange={(e) => onFormChange('url', e.target.value)} />
+      className="form-control"
+      placeholder="URL"
+      style={{ display: 'inline-block', width: '300px' }}
+      value={url}
+      onChange={(e) => onFormChange('url', e.target.value)} />
     <select className="form-control"
-            style={{ display: 'inline-block', width: '100px' }}
-            value={type}
-            onChange={(e) => onFormChange('type', e.target.value)} >
+      style={{ display: 'inline-block', width: '100px' }}
+      value={type}
+      onChange={(e) => onFormChange('type', e.target.value)} >
       <option value="gerrit">Gerrit</option>
       <option value="rietveld">Rietveld</option>
     </select>
     <button type="button"
-            className="close"
-            style={{ position: 'relative', top: '4px' }}
-            onClick={() => onRemove()}>
+      className="close"
+      style={{ position: 'relative', top: '4px' }}
+      onClick={() => onRemove()}>
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -133,13 +133,13 @@ class ConfigModalImpl extends React.Component {
     const siteLines = this.state.sites.map((site, index) => {
       return (
         <SiteLine key={index}
-                  index={index}
-                  label={site.label}
-                  url={site.url}
-                  type={site.type}
-                  onFormChange={
-                    (key, value) => this.changeSite(index, key, value)}
-                  onRemove={() => this.removeSite(index)} />
+          index={index}
+          label={site.label}
+          url={site.url}
+          type={site.type}
+          onFormChange={
+            (key, value) => this.changeSite(index, key, value)}
+          onRemove={() => this.removeSite(index)} />
       );
     });
     const presetLinks = [];
@@ -149,16 +149,16 @@ class ConfigModalImpl extends React.Component {
       }
       presetLinks.push(
         <a key={preset.label}
-           href="javascript:void(0)"
-           onClick={() => this.addSite(preset)}>
+          href="javascript:void(0)"
+          onClick={() => this.addSite(preset)}>
           {preset.name}
         </a>
       );
     });
     return (
       <Modal show={true}
-             onHide={() => this.props.onCancel()}
-             style={{ width: '600px', margin: '0 auto' }}>
+        onHide={() => this.props.onCancel()}
+        style={{ width: '600px', margin: '0 auto' }}>
         <Modal.Header>
           <Modal.Title>Configure Code Review Sites</Modal.Title>
         </Modal.Header>
@@ -168,9 +168,9 @@ class ConfigModalImpl extends React.Component {
           </form>
           <form className="form-inline" style={{ overflow: 'hidden' }}>
             <button type="button"
-                    className="close"
-                    style={{ marginTop: '4px' }}
-                    onClick={() => this.addSite(EMPTY_SITE)} >
+              className="close"
+              style={{ marginTop: '4px' }}
+              onClick={() => this.addSite(EMPTY_SITE)} >
               +
             </button>
             <div style={{ margin: '10px 0 -2px', fontSize: '9pt' }}>

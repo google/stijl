@@ -52,17 +52,17 @@ export class RietveldBackend extends BackendInterface {
   doFetch_(selfAddress) {
     const searchPromises = [
       this.doSearch_(
-          'limit=' + entryLimit + '&owner=' + selfAddress + '&closed=False',
-          selfAddress),
+        'limit=' + entryLimit + '&owner=' + selfAddress + '&closed=False',
+        selfAddress),
       this.doSearch_(
-          'limit=' + entryLimit + '&reviewer=' + selfAddress + '&closed=False',
-          selfAddress),
+        'limit=' + entryLimit + '&reviewer=' + selfAddress + '&closed=False',
+        selfAddress),
       this.doSearch_(
-          'limit=' + entryLimit + '&cc=' + selfAddress + '&closed=False',
-          selfAddress),
+        'limit=' + entryLimit + '&cc=' + selfAddress + '&closed=False',
+        selfAddress),
       this.doSearch_(
-          'limit=' + entryLimit + '&owner=' + selfAddress + '&closed=True',
-          selfAddress)
+        'limit=' + entryLimit + '&owner=' + selfAddress + '&closed=True',
+        selfAddress)
     ];
     return Promise.all(searchPromises).then((changesFromSearches) => {
       // Dedup changes in case searches returned overlapping results.

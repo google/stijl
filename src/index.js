@@ -44,7 +44,7 @@ const main = () => {
 
   const App = () => (
     <Provider store={store}>
-    <Dashboard />
+      <Dashboard />
     </Provider>
   );
 
