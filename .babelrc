@@ -1,15 +1,10 @@
 {
   "presets": [
-    ["env", {
+    ["@babel/preset-env", {
       "targets": {
-        "chrome": 63
+        "chrome": 76
       }
     }],
-    "react"
-  ],
-  "plugins": [
-    ["transform-object-rest-spread", {
-      "useBuiltIns": true
-    }]
+    "@babel/preset-react"
   ]
 }

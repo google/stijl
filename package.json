@@ -13,8 +13,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "npm run lint && rm -f stijl.zip && git clean -fdx extension && npm run build-js && cd extension && zip -r ../stijl.zip .",
-    "build-js": "browserify src/index.js -o extension/dashboard.js -t [ babelify --presets [ env react ] ]",
-    "watch": "watchify src/index.js -v -d -o extension/dashboard.js -t [ babelify --presets [ env react ] ]",
+    "build-js": "browserify src/index.js -o extension/dashboard.js -t [ babelify --presets [ @babel/preset-env @babel/preset-react ] ]",
+    "watch": "watchify src/index.js -v -d -o extension/dashboard.js -t [ babelify --presets [ @babel/preset-env @babel/preset-react ] ]",
     "lint": "eslint src",
     "travis": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,11 +23,10 @@
   "author": "Shuhei Takahashi <takahashi.shuhei@gmail.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "babelify": "^8.0.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "babelify": "^10.0.0",
     "bootstrap": "^3.3.7",
     "browserify": "^16.5.0",
     "jquery": "^3.3.1",
