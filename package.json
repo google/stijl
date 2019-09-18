@@ -30,14 +30,14 @@
     "bootstrap": "^3.3.7",
     "browserify": "^16.5.0",
     "jquery": "^3.4.1",
-    "react": "^16.2.0",
+    "react": "^16.9.0",
     "react-addons-update": "^15.6.2",
     "react-bootstrap": "^0.32.0",
-    "react-dom": "^16.2.0",
+    "react-dom": "^16.9.0",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0",
+    "redux-thunk": "^2.3.0",
     "universal-analytics": "^0.4.20"
   },
   "devDependencies": {
