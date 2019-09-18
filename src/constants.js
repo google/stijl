@@ -17,8 +17,8 @@ export const PRESETS = [
   {
     name: 'Chromium',
     label: 'chromium',
-    url: 'https://codereview.chromium.org',
-    type: 'rietveld',
+    url: 'https://chromium-review.googlesource.com',
+    type: 'gerrit',
   },
   {
     name: 'Android AOSP',
