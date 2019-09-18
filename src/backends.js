@@ -14,7 +14,6 @@
 
 import { DemoBackend } from './backends/demo';
 import { GerritBackend } from './backends/gerrit';
-import { RietveldBackend } from './backends/rietveld';
 import * as states from './states';
 
 /**
@@ -28,8 +27,6 @@ export const create = (site) => {
       return new DemoBackend(site);
     case states.SiteType.GERRIT:
       return new GerritBackend(site);
-    case states.SiteType.RIETVELD:
-      return new RietveldBackend(site);
     default:
       // Unknown site type. Return null.
       return null;

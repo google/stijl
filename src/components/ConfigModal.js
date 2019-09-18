@@ -44,7 +44,6 @@ const SiteLine = ({ index, label, url, type, onFormChange, onRemove }) => (
       value={type}
       onChange={(e) => onFormChange('type', e.target.value)} >
       <option value="gerrit">Gerrit</option>
-      <option value="rietveld">Rietveld</option>
     </select>
     <button type="button"
       className="close"
