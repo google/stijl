@@ -18,9 +18,9 @@ import ChangeTable from '../components/ChangeTable';
 
 const mapStateToProps = ({ activeChangesBySite }) => {
   const allChanges = [];
-  Object.values(activeChangesBySite).forEach((changes) => {
+  for (const changes of Object.values(activeChangesBySite)) {
     allChanges.push(...changes);
-  });
+  }
   return { changes: allChanges };
 };
 const mapDispatchToProps = (dispatch) => ({});

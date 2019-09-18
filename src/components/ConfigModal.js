@@ -115,16 +115,17 @@ class ConfigModalImpl extends React.Component {
     let valid = true;
     const sites = [];
     const seenLabels = {};
-    this.state.sites.forEach(({ label, url, type }) => {
+    for (const site of this.state.sites) {
+      const { label } = site;
       if (label.length == 0) {
         return;
       } else if (seenLabels[label]) {
         valid = false;
       } else {
-        sites.push({ label, url, type });
+        sites.push(site);
         seenLabels[label] = true;
       }
-    });
+    }
     return valid ? sites : null;
   }
 
@@ -142,7 +143,7 @@ class ConfigModalImpl extends React.Component {
       );
     });
     const presetLinks = [];
-    constants.PRESETS.forEach((preset) => {
+    for (const preset of constants.PRESETS) {
       if (presetLinks.length > 0) {
         presetLinks.push(', ');
       }
@@ -153,7 +154,7 @@ class ConfigModalImpl extends React.Component {
           {preset.name}
         </a>
       );
-    });
+    }
     return (
       <Modal show={true}
         onHide={() => this.props.onCancel()}

@@ -24,12 +24,11 @@ const mapStateToProps = ({ modal, config }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onSave(sites) {
-    permissions.request(sites).then(() => {
-      dispatch(actions.updateSites(sites));
-      dispatch(actions.closeModal());
-      dispatch(actions.refreshAll());
-    });
+  async onSave(sites) {
+    await permissions.request(sites);
+    dispatch(actions.updateSites(sites));
+    dispatch(actions.closeModal());
+    dispatch(actions.refreshAll());
   },
 
   onCancel() {

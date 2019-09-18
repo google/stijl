@@ -74,7 +74,7 @@ class ChangeTable extends React.Component {
       submitted: [],
       cced: [],
     };
-    this.props.changes.forEach((change) => {
+    for (const change of this.props.changes) {
       let category;
       if (change['owned']) {
         if (change['status'] == 'Pending') {
@@ -96,8 +96,8 @@ class ChangeTable extends React.Component {
       if (category) {
         changesByCategory[category].push(change);
       }
-    });
-    Object.keys(changesByCategory).forEach((key) => {
+    }
+    for (const key of Object.keys(changesByCategory)) {
       changesByCategory[key].sort((a, b) => {
         if (a['updated'] < b['updated']) {
           return 1;
@@ -107,7 +107,7 @@ class ChangeTable extends React.Component {
         }
         return 0;
       });
-    });
+    }
     return (
       <table className="table table-hover table-bordered table-condensed
                         review-table">

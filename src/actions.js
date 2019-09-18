@@ -83,25 +83,28 @@ const finishRefreshSite = (label, success) => {
 };
 
 export const refreshAll = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch(startRefreshAll());
 
     const { activeSites } = getState();
 
-    permissions.check(activeSites).then(() => {
-      Object.values(activeSites).forEach((site) => {
-        const backend = backends.create(site);
-        return backend.fetch().then((changes) => {
-          dispatch(updateChangesBySite(site.label, changes));
-        }).then(() => {
-          dispatch(finishRefreshSite(site.label, true));
-        }, (err) => {
-          dispatch(finishRefreshSite(site.label, false));
-          console.error(err);
-        });
-      });
-    }, () => {
+    try {
+      await permissions.check(activeSites);
+    } catch (err) {
       dispatch(showPermissionModal());
-    });
+      return;
+    }
+
+    for (const site of Object.values(activeSites)) {
+      const backend = backends.create(site);
+      try {
+        const changes = await backend.fetch();
+        dispatch(updateChangesBySite(site.label, changes));
+        dispatch(finishRefreshSite(site.label, true));
+      } catch (err) {
+        dispatch(finishRefreshSite(site.label, false));
+        console.error(err);
+      }
+    }
   };
 };

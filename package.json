@@ -13,8 +13,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "npm run lint && rm -f stijl.zip && git clean -fdx extension && npm run build-js && cd extension && zip -r ../stijl.zip .",
-    "build-js": "browserify src/index.js -o extension/dashboard.js -t [ babelify --presets [ @babel/preset-env @babel/preset-react ] ]",
-    "watch": "watchify src/index.js -v -d -o extension/dashboard.js -t [ babelify --presets [ @babel/preset-env @babel/preset-react ] ]",
+    "build-js": "browserify src/index.js -o extension/dashboard.js -t [ babelify ]",
+    "watch": "watchify src/index.js -v -d -o extension/dashboard.js -t [ babelify ]",
     "lint": "eslint src",
     "travis": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"

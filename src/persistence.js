@@ -38,9 +38,8 @@ const subscribe = (store) => {
  * @returns {Promise<undefined>} Resolved when the data is loaded and
  *     subscription is done.
  */
-export const init = (store) => {
-  return chromeAsync.storage.sync.get(null).then((config) => {
-    store.dispatch(actions.updateConfig(config));
-    subscribe(store);
-  });
+export const init = async (store) => {
+  const config = await chromeAsync.storage.sync.get(null);
+  store.dispatch(actions.updateConfig(config));
+  subscribe(store);
 };

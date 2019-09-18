@@ -32,11 +32,11 @@ const getOrigin = (site) => {
  * @param {{url: string}[]} sites - Array of site objects.
  * @returns {Promise<undefined>} Resolved on success, or rejected on fail.
  */
-const wrapChromeApi = (api, sites) => {
-  return api({origins: sites.map(getOrigin)}).then((result) => {
-    if (!result)
-      throw new Error('Failed');
-  });
+const wrapChromeApi = async (api, sites) => {
+  const result = await api({origins: sites.map(getOrigin)});
+  if (!result) {
+    throw new Error('Failed');
+  }
 };
 
 /**
