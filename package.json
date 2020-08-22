@@ -13,8 +13,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "npm run lint && rm -f stijl.zip && git clean -fdx extension && npm run build-js && cd extension && zip -r ../stijl.zip .",
-    "build-js": "browserify src/index.js -o extension/dashboard.js -t [ babelify ]",
-    "watch": "watchify src/index.js -v -d -o extension/dashboard.js -t [ babelify ]",
+    "build-js": "webpack",
+    "watch": "webpack -w",
     "lint": "eslint src",
     "travis": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,13 +22,15 @@
   "keywords": [],
   "author": "Shuhei Takahashi <takahashi.shuhei@gmail.com>",
   "license": "Apache-2.0",
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.1.0",
     "babelify": "^10.0.0",
     "bootstrap": "^3.3.7",
-    "browserify": "^16.5.0",
+    "eslint": "^6.4.0",
+    "eslint-plugin-react": "^7.14.3",
     "jquery": "^3.4.1",
     "react": "^16.9.0",
     "react-addons-update": "^15.6.2",
@@ -38,11 +40,8 @@
     "react-router": "^4.2.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.3.0",
-    "universal-analytics": "^0.4.20"
-  },
-  "devDependencies": {
-    "eslint": "^6.4.0",
-    "eslint-plugin-react": "^7.14.3",
-    "watchify": "^3.11.1"
+    "universal-analytics": "^0.4.20",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   }
 }
