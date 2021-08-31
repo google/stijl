@@ -31,7 +31,7 @@
     "bootstrap": "^3.3.7",
     "eslint": "^6.4.0",
     "eslint-plugin-react": "^7.14.3",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "react": "^16.9.0",
     "react-addons-update": "^15.6.2",
     "react-bootstrap": "^0.32.0",
